@@ -13,8 +13,16 @@ void setup()
 {
   while (!Serial);
     Serial.begin(9600);
-  
+    // initialize the transceiver on the SPI bus
+   
+  // print example's introductory prompt
+  Serial.println(F("RF24/examples/GettingStarted"));
   radio.begin();
+  
+  if (!radio.begin()) {
+    Serial.println(F("radio hardware is not responding!!"));
+    while (1) {} // hold in infinite loop
+  }
   
   //set the address
   radio.openReadingPipe(0, address);
