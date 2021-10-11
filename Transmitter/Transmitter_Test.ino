@@ -12,6 +12,11 @@ const byte address[6] = "00001";
 void setup()
 {
   radio.begin();
+
+  if (!radio.begin()) {
+    Serial.println(F("radio hardware is not responding!!"));
+    while (1) {} // hold in infinite loop
+  }
   
   //set the address
   radio.openWritingPipe(address);
