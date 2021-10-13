@@ -23,6 +23,10 @@ RF24 radio(CE, CSN);
 void setup() {
     radio.begin();                  // Activate Radio Object, uses default Arduino SPI bus
 
+    if (radio.begin()) {
+        Serial.println(F("Radio is alive"));
+    }
+
     // Code section below from Arduino Class Documentation
     if (!radio.begin()) {
         Serial.println(F("radio hardware not responding!"));
