@@ -34,7 +34,7 @@ void setup() {
     }
     // End section from Arduino Class Documentation
 
-    radio.openReadingPipe(address); // Create pipe to radio to read data and sets address
+    radio.openReadingPipe(0, address); // Create pipe to radio to read data and sets address
                                     // Defaults on pipe 0 (can have up to six pipes per receiver)
     radio.startistening();          // Turns on receiver function, this transceiver will only receive from now on
                                     // Put the above line in the loop section if we want to send an acknowledgement packet 
