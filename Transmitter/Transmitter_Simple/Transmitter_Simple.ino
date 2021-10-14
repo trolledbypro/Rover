@@ -10,26 +10,26 @@
 #include <RF24.h>                   // Controls Radio
 
 // Define constants
-const int CE = 7;                   // Chip Enable
+const int CE = 9;                   // Chip Enable
 const int CSN = 8;                  // Chip Select NOT
 
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match receiver
 
 // Create Radio Object
-RF24 radio(CE, CSN);
+RF24 radio(9, 8);
 
 // Arduino Setup Section
 void setup() {
     radio.begin();                  // Activate Radio Object, uses default Arduino SPI bus
-
+    Serial.begin(9600);
     if (radio.begin()) {
-        Serial.println(F("Radio is alive"));
+        Serial.println("Radio is alive");
     }
 
     // Code section below from Arduino Class Documentation
     if (!radio.begin()) {
-        Serial.println(F("radio hardware not responding!"));
+        Serial.println("radio hardware not responding!");
         while (1) {}                //hold program in infinite loop to prevent subsequent errors
     }
     // End section from Arduino Class Documentation
