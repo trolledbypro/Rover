@@ -17,12 +17,12 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
 // Create Radio Object
-RF24 radio(CE, CSN);
+RF24 radio(CE , CSN);
 
 // Arduino Setup Section
 void setup() {
     radio.begin();                  // Activate Radio Object, uses default Arduino SPI bus
-
+    Serial.begin(9600);
     if (radio.begin()) {
         Serial.println(F("Radio is alive"));
     }
@@ -36,17 +36,15 @@ void setup() {
 
     radio.openReadingPipe(0, address); // Create pipe to radio to read data and sets address
                                     // Defaults on pipe 0 (can have up to six pipes per receiver)
-    radio.startistening();          // Turns on receiver function, this transceiver will only receive from now on
+    radio.startListening();          // Turns on receiver function, this transceiver will only receive from now on
                                     // Put the above line in the loop section if we want to send an acknowledgement packet 
 }
 
 // Arduino loop section
 void loop() {
-    if (radio.available) {          // If data is available in buffer
-        while (radio.available) {
-            char read[32] = "";     
-            radio.read(&read, sizeof(read));
-            Serial.println(read);   // Send to serial output so we can see it
-        }
+    if (radio.available()) {          // If data is available in buffer
+        char read[32] = "";     
+        radio.read(&read, sizeof(read));
+        Serial.println(read);   // Send to serial output so we can see it
     }
 }
