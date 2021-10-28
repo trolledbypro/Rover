@@ -15,9 +15,11 @@ const int CSN = 8;                  // Chip Select NOT
 
 const int button = 5;               // Button input pin
 const int pot = 26;                 // Potentiometer input pin
-int potValue = 0;                   // Store potentiometer value
 
-//**ADD SOME DATA TYPE STRUCT TO STORE VALUE OF POT AND BUTTON STATE**
+struct payload {
+    int potValue = 0;               // Store potentiometer value
+    int buttonState = 0;            // Store button state    
+}
 
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match receiver
@@ -50,9 +52,9 @@ void setup() {
 
 // Arduino loop section
 void loop() {
-    potValue = analogRead(pot);     // Read value of potentiometer (0-1024? 0-5V)
-    //**ADD BUTTON STUFF**
-    //** CHANGE TO PUSH DATA TO TRANSMITTER**
-    radio.write(&text, sizeof(text));   // Pass data by reference, also must pass size
-    delay(1000);                    // 1 second delay
+    payload.potValue = analogRead(pot);       // Record value of potentiometer (0-1024? 0-5V)
+    payload.buttonState = digitalRead(button);// Record button state
+   
+    radio.write(&payload, sizeof(payload));   // Pass data by reference, also must pass size
+    delay(1000);                              // 1 second delay
 }
