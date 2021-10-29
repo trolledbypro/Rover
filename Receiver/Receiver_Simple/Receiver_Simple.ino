@@ -16,12 +16,17 @@ const int CSN = 8;                  // Chip Select NOT
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
+struct payload {
+    int potValue = 0;               // Store potentiometer value
+    int buttonState = 0;            // Store button state    
+};
+
 // Create Radio Object
 RF24 radio(CE , CSN);
 
 // Arduino Setup Section
 void setup() {
-    radio.begin();                  // Activate Radio Object, uses default Arduino SPI bus
+    radio.begin();                      // Activate Radio Object, uses default Arduino SPI bus
     Serial.begin(9600);
     if (radio.begin()) {
         Serial.println(F("Radio is alive"));
@@ -30,21 +35,21 @@ void setup() {
     // Code section below from Arduino Class Documentation
     if (!radio.begin()) {
         Serial.println(F("radio hardware not responding!"));
-        while (1) {}                //hold program in infinite loop to prevent subsequent errors
+        while (1) {}                    //hold program in infinite loop to prevent subsequent errors
     }
     // End section from Arduino Class Documentation
 
-    radio.openReadingPipe(0, address); // Create pipe to radio to read data and sets address
-                                    // Defaults on pipe 0 (can have up to six pipes per receiver)
-    radio.startListening();          // Turns on receiver function, this transceiver will only receive from now on
-                                    // Put the above line in the loop section if we want to send an acknowledgement packet 
+    radio.openReadingPipe(0, address);  // Create pipe to radio to read data and sets address
+                                        // Defaults on pipe 0 (can have up to six pipes per receiver)
+    radio.startListening();             // Turns on receiver function, this transceiver will only receive from now on
+                                        // Put the above line in the loop section if we want to send an acknowledgement packet 
 }
 
 // Arduino loop section
 void loop() {
-    if (radio.available()) {          // If data is available in buffer
-        char read[32] = "";     
-        radio.read(&read, sizeof(read));
-        Serial.println(read);   // Send to serial output so we can see it
+    if (radio.available()) {                    // If data is available in buffer
+        radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
+        // Print to serial monitor
+        Serial.print("Pot Value: ").print(payload.potValue).print("Buton State: ").println(payload.buttonState);   
     }
 }
