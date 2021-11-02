@@ -13,13 +13,16 @@
 const int CE = 9;                   // Chip Enable
 const int CSN = 8;                  // Chip Select NOT
 
-const int button = 5;               // Button input pin
+const int enableButton = 5;         // Button input pin
+const int directionButton = 4;      // Direction button input pin
 const int pot = 26;                 // Potentiometer input pin
 
 struct payload {
-    int potValue = 0;               // Store potentiometer value
-    int buttonState = 0;            // Store button state    
-}
+    byte potValue = 0;               // Store potentiometer value
+    byte enableState= 0;             // Store button state for enable
+    byte swapDirection = 0;          // Store button state for direction change
+    // Byte due to PWM of sample DC motor
+};
 
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match receiver
@@ -52,9 +55,10 @@ void setup() {
 
 // Arduino loop section
 void loop() {
-    payload.potValue = analogRead(pot);       // Record value of potentiometer (0-1024? 0-5V)
-    payload.buttonState = digitalRead(button);// Record button state
-   
+    payload.potValue = analogRead(pot);                      // Record value of potentiometer (0-1024? 0-5V)
+    payload.enableState = digitalRead(enableButton);         // Record button state
+    payload.swapDirection = digitalRead(directionButton);    // Record button state
+
     radio.write(&payload, sizeof(payload));   // Pass data by reference, also must pass size
     delay(1000);                              // 1 second delay
 }

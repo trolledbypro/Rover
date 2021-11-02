@@ -13,12 +13,18 @@
 const int CE = 7;                   // Chip Enable
 const int CSN = 8;                  // Chip Select NOT
 
+const int ENABLE = 5;               // ESC enable
+const int DIRA = 3;                 // Direction pin #1
+const int DIRB = 4;                 // Direciton pin #2, inverse of DIRA
+
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
 struct payload {
-    int potValue = 0;               // Store potentiometer value
-    int buttonState = 0;            // Store button state    
+    byte potValue = 0;               // Store potentiometer value
+    byte enableState= 0;             // Store button state for enable
+    byte swapDirection = 0;          // Store button state for direction change
+    // Byte due to PWM of sample DC motor
 };
 
 // Create Radio Object
@@ -50,6 +56,9 @@ void loop() {
     if (radio.available()) {                    // If data is available in buffer
         radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
         // Print to serial monitor
-        Serial.print("Pot Value: ").print(payload.potValue).print("Buton State: ").println(payload.buttonState);   
+        Serial.print("Pot Value: ").print(payload.potValue).print("Enable State: ").print(payload.enableState).print("Direction change state: ").println(payload.swapDirection);   
+        if (payload.buttonState == HIGH) {
+            
+        }
     }
 }
