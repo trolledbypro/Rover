@@ -17,7 +17,7 @@ const int enableButton = 5;         // Button input pin
 const int directionButton = 4;      // Direction button input pin
 const int pot = 26;                 // Potentiometer input pin
 
-struct payload {
+struct packet {
     byte potValue = 0;               // Store potentiometer value
     byte enableState= 0;             // Store button state for enable
     byte swapDirection = 0;          // Store button state for direction change
@@ -29,6 +29,9 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
 
 // Create Radio Object
 RF24 radio(CE, CSN);
+
+    // Create Packet
+    packet payload;
 
 // Arduino Setup Section
 void setup() {
@@ -55,7 +58,7 @@ void setup() {
 
 // Arduino loop section
 void loop() {
-    payload.potValue = analogRead(pot);                      // Record value of potentiometer (0-1024? 0-5V)
+    payload.potValue = map(analogRead(pot), 0, 1023, 0, 255);// Record value of potentiometer (0-1024 mapped to byte size, 0-255)
     payload.enableState = digitalRead(enableButton);         // Record button state
     payload.swapDirection = digitalRead(directionButton);    // Record button state
 

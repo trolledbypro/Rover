@@ -20,20 +20,23 @@ const int DIRB = 4;                 // Direciton pin #2, inverse of DIRA
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
-struct payload {
+struct packet {
     byte potValue = 0;              // Store potentiometer value
     byte enableState= 0;            // Store button state for enable
     byte swapDirection = 0;         // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
 
-byte lastEnableState = 0;            // Integer to represent previous state of enable
-byte lastDirectionState = 1;         // Integer to represent previous direction state
+byte lastEnableState = LOW;         // Integer to represent previous state of enable
+byte lastDirectionState = HIGH;     // Integer to represent previous direction state
                                     // 1 = FORWARD (default)
                                     // 0 = BACKWARDS
 
 // Create Radio Object
 RF24 radio(CE , CSN);
+
+// Create Packet
+packet payload;
 
 // Arduino Setup Section
 void setup() {
@@ -69,21 +72,21 @@ void loop() {
     int currentDirectionState = payload.swapDirection;
 
     if (currentEnableState != lastEnableState) {
-        if (currentEnableState == 1) 
+        if (currentEnableState == HIGH) 
             digitalWrite(ENABLE, HIGH);
 
-        else if (currentEnableState == 0)
+        else if (currentEnableState == LOW)
             digitalWrite(ENABLE, LOW);
     }
 
 
     if (currentDirectionState != lastDirectionState) {
-        if (lastDirectionState == 0) {
+        if (lastDirectionState == HIGH) {
             digitalWrite(DIRA, HIGH);
             digitalWrite(DIRB, LOW);
         }
 
-        else if (currentEnableState == LOW) {
+        else if (lastDirectionState == LOW) {
             digitalWrite(DIRA, LOW);
             digitalWrite(DIRB, HIGH);
         }
