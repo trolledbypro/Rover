@@ -21,11 +21,16 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
 struct payload {
-    byte potValue = 0;               // Store potentiometer value
-    byte enableState= 0;             // Store button state for enable
-    byte swapDirection = 0;          // Store button state for direction change
+    byte potValue = 0;              // Store potentiometer value
+    byte enableState= 0;            // Store button state for enable
+    byte swapDirection = 0;         // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
+
+byte lastEnableState = 0;            // Integer to represent previous state of enable
+byte lastDirectionState = 1;         // Integer to represent previous direction state
+                                    // 1 = FORWARD (default)
+                                    // 0 = BACKWARDS
 
 // Create Radio Object
 RF24 radio(CE , CSN);
@@ -49,6 +54,7 @@ void setup() {
                                         // Defaults on pipe 0 (can have up to six pipes per receiver)
     radio.startListening();             // Turns on receiver function, this transceiver will only receive from now on
                                         // Put the above line in the loop section if we want to send an acknowledgement packet 
+    
 }
 
 // Arduino loop section
@@ -57,8 +63,29 @@ void loop() {
         radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
         // Print to serial monitor
         Serial.print("Pot Value: ").print(payload.potValue).print("Enable State: ").print(payload.enableState).print("Direction change state: ").println(payload.swapDirection);   
-        if (payload.buttonState == HIGH) {
-            
+    }
+
+    int currentEnableState = payload.enableState;
+    int currentDirectionState = payload.swapDirection;
+
+    if (currentEnableState != lastEnableState) {
+        if (currentEnableState == 1) 
+            digitalWrite(ENABLE, HIGH);
+
+        else if (currentEnableState == 0)
+            digitalWrite(ENABLE, LOW);
+    }
+
+
+    if (currentDirectionState != lastDirectionState) {
+        if (lastDirectionState == 0) {
+            digitalWrite(DIRA, HIGH);
+            digitalWrite(DIRB, LOW);
+        }
+
+        else if (currentEnableState == LOW) {
+            digitalWrite(DIRA, LOW);
+            digitalWrite(DIRB, HIGH);
         }
     }
 }
