@@ -10,17 +10,17 @@
 #include <RF24.h>                   // Controls Radio
 
 // Define constants
-const int CE = 9;                   // Chip Enable
-const int CSN = 8;                  // Chip Select NOT
+#define CE 3                       // Chip Enable
+#define CSN 2                      // Chip Select NOT
 
-const int enableButton = 5;         // Button input pin
-const int directionButton = 4;      // Direction button input pin
-const int pot = 26;                 // Potentiometer input pin
+#define enableButton 20            // Button input pin
+#define directionButton 21         // Direction button input pin
+#define pot 26                      // Potentiometer input pin
 
 struct packet {
-    byte potValue = 0;               // Store potentiometer value
-    byte enableState= 0;             // Store button state for enable
-    byte swapDirection = 0;          // Store button state for direction change
+    byte potValue = 0;              // Store potentiometer value
+    byte enableState= 0;            // Store button state for enable
+    byte swapDirection = 0;         // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
 
@@ -53,7 +53,9 @@ void setup() {
     radio.stopListening();          // Shuts off receiver function, this transceiver will only tramsit from now on
                                     // Put the above line in the loop section if we want to receive an acknowledgement packet 
 
-    pinMode(button, INPUT);         // Activate button input pin
+    pinMode(enableButton, INPUT);            // Activate button input pin
+    pinMode(directionButton, INPUT);         // Activate button input pin
+
 }
 
 // Arduino loop section

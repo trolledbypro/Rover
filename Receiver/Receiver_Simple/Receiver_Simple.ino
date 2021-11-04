@@ -10,12 +10,12 @@
 #include <RF24.h>                   // Controls Radio
 
 // Define constants
-const int CE = 7;                   // Chip Enable
-const int CSN = 8;                  // Chip Select NOT
+#define CE 7                        // Chip Enable
+#define CSN 8                       // Chip Select NOT
 
-const int ENABLE = 5;               // ESC enable
-const int DIRA = 3;                 // Direction pin #1
-const int DIRB = 4;                 // Direciton pin #2, inverse of DIRA
+#define ENABLE 5                    // ESC enable
+#define DIRA 3                      // Direction pin #1
+#define DIRB 4                      // Direciton pin #2, inverse of DIRA
 
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
@@ -65,7 +65,12 @@ void loop() {
     if (radio.available()) {                    // If data is available in buffer
         radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
         // Print to serial monitor
-        Serial.print("Pot Value: ").print(payload.potValue).print("Enable State: ").print(payload.enableState).print("Direction change state: ").println(payload.swapDirection);   
+        Serial.print("Pot Value: ");
+        Serial.print(payload.potValue);
+        Serial.print("Enable State: ");
+        Serial.print(payload.enableState);
+        Serial.print("Direction change state: ");
+        Serial.println(payload.swapDirection);   
     }
 
     int currentEnableState = payload.enableState;
