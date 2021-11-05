@@ -17,7 +17,7 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
 // Create Radio Object
-RF24 radio(CE , CSN);
+RF24 radio(CE, CSN);
 
 // Arduino Setup Section
 void setup() {
