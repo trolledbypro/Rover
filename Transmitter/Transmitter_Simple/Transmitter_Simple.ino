@@ -10,8 +10,8 @@
 #include <RF24.h>                   // Controls Radio
 
 // Define constants
-#define CE 3                       // Chip Enable
-#define CSN 2                      // Chip Select NOT
+#define CE 9                       // Chip Enable
+#define CSN 8                      // Chip Select NOT
 
 #define enableButton 20            // Button input pin
 #define directionButton 21         // Direction button input pin
@@ -30,8 +30,8 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
 // Create Radio Object
 RF24 radio(CE, CSN);
 
-    // Create Packet
-    packet payload;
+// Create Packet
+packet payload;
 
 // Arduino Setup Section
 void setup() {
@@ -53,8 +53,8 @@ void setup() {
     radio.stopListening();          // Shuts off receiver function, this transceiver will only tramsit from now on
                                     // Put the above line in the loop section if we want to receive an acknowledgement packet 
 
-    pinMode(enableButton, INPUT);            // Activate button input pin
-    pinMode(directionButton, INPUT);         // Activate button input pin
+    pinMode(enableButton, INPUT_PULLUP);            // Activate button input pin
+    pinMode(directionButton, INPUT_PULLUP);         // Activate button input pin
 
 }
 
