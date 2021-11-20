@@ -21,9 +21,10 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
 
 struct packet {
-    byte potValue = 0;              // Store potentiometer value
+    byte xValue = 0;                // Store potentiometer value
+    byte yValue = 0;                // Store potentiometer value
     byte enableState= 0;            // Store button state for enable
-    byte swapDirection = 0;         // Store button state for direction change
+    byte Direction = 0;         // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
 
@@ -65,16 +66,18 @@ void loop() {
     if (radio.available()) {                    // If data is available in buffer
         radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
         // Print to serial monitor
-        Serial.print("Pot Value: ");
-        Serial.print(payload.potValue);
-        Serial.print("Enable State: ");
+        Serial.print("X value: ");
+        Serial.print(payload.xValue);
+        Serial.print("\tY value: ");
+        Serial.print(payload.yValue);
+        Serial.print("\tEnable State: ");
         Serial.print(payload.enableState);
-        Serial.print("Direction change state: ");
-        Serial.println(payload.swapDirection);   
+        Serial.print("\tDirection state: ");
+        Serial.println(payload.Direction);   
     }
 
     int currentEnableState = payload.enableState;
-    int currentDirectionState = payload.swapDirection;
+    int currentDirectionState = payload.Direction;
 
     if (currentEnableState != lastEnableState) {
         if (currentEnableState == HIGH) 

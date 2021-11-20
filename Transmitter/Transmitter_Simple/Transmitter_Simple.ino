@@ -10,17 +10,19 @@
 #include <RF24.h>                   // Controls Radio
 
 // Define constants
-#define CE 9                       // Chip Enable
-#define CSN 8                      // Chip Select NOT
+#define CE 9                        // Chip Enable
+#define CSN 8                       // Chip Select NOT
 
-#define enableButton 20            // Button input pin
-#define directionButton 21         // Direction button input pin
-#define pot 26                      // Potentiometer input pin
+#define enableButton 20             // Button input pin
+#define directionButton 21          // Direction button input pin
+#define X_pin 14                    // Joystick x-axis
+#define Y_pin 15                    // Joystick y-axis
 
 struct packet {
-    byte potValue = 0;              // Store potentiometer value
+    byte xValue = 0;                // Store potentiometer value
+    byte yValue = 0;                // Store potentiometer value
     byte enableState= 0;            // Store button state for enable
-    byte swapDirection = 0;         // Store button state for direction change
+    byte Direction = 0;         // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
 
@@ -53,17 +55,30 @@ void setup() {
     radio.stopListening();          // Shuts off receiver function, this transceiver will only tramsit from now on
                                     // Put the above line in the loop section if we want to receive an acknowledgement packet 
 
-    pinMode(enableButton, INPUT_PULLUP);            // Activate button input pin
-    pinMode(directionButton, INPUT_PULLUP);         // Activate button input pin
+    pinMode(enableButton, INPUT);            // Activate button input pin
+    pinMode(directionButton, INPUT);         // Activate button input pin
 
 }
 
 // Arduino loop section
 void loop() {
-    payload.potValue = map(analogRead(pot), 0, 1023, 0, 255);// Record value of potentiometer (0-1024 mapped to byte size, 0-255)
+    payload.xValue = map(analogRead(X_pin), 0, 1023, 0, 255);// Record value of potentiometer (0-1024 mapped to byte size, 0-255)
+    payload.yValue = map(analogRead(Y_pin), 0, 1023, 0, 255);// Record value of potentiometer (0-1024 mapped to byte size, 0-255)
     payload.enableState = digitalRead(enableButton);         // Record button state
-    payload.swapDirection = digitalRead(directionButton);    // Record button state
+    if (payload.enableState == 1)
+    {
+      Serial.println("Enable ON");
+    }
+    else if (payload.enableState == 0)
+    {
+      Serial.println("Enable OFF");
+    }
+    Serial.print("X value: ");
+    Serial.println(payload.xValue);
+    Serial.print("Y value: ");
+    Serial.println(payload.yValue);
+    payload.Direction = digitalRead(directionButton);    // Record button state
 
     radio.write(&payload, sizeof(payload));   // Pass data by reference, also must pass size
-    delay(1000);                              // 1 second delay
+    delay(10);                                // 1 second delay
 }
