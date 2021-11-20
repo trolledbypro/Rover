@@ -80,5 +80,5 @@ void loop() {
     payload.Direction = digitalRead(directionButton);    // Record button state
 
     radio.write(&payload, sizeof(payload));   // Pass data by reference, also must pass size
-    delay(10);                                // 1 second delay
+    //delay(10);                                // 1 second delay
 }

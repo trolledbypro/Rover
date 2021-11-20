@@ -8,6 +8,7 @@
 #include <SPI.h>                    // Controls SPI
 #include <nRF24L01.h>               // Controls Radio
 #include <RF24.h>                   // Controls Radio
+#include <Servo.h>                  // Servo control
 
 // Define constants
 #define CE 7                        // Chip Enable
@@ -16,6 +17,7 @@
 #define ENABLE 5                    // ESC enable
 #define DIRA 3                      // Direction pin #1
 #define DIRB 4                      // Direciton pin #2, inverse of DIRA
+#define SERVOPIN 9                  // Pin for servo output
 
 const byte address[6] = "00001";    // Address can be any 5 bit byte array
                                     // Must match transmitter
@@ -24,7 +26,7 @@ struct packet {
     byte xValue = 0;                // Store potentiometer value
     byte yValue = 0;                // Store potentiometer value
     byte enableState= 0;            // Store button state for enable
-    byte Direction = 0;         // Store button state for direction change
+    byte Direction = 0;             // Store button state for direction change
     // Byte due to PWM of sample DC motor
 };
 
@@ -36,6 +38,9 @@ byte lastDirectionState = HIGH;     // Integer to represent previous direction s
 // Create Radio Object
 RF24 radio(CE , CSN);
 
+// Create servo object
+Servo servo;
+
 // Create Packet
 packet payload;
 
@@ -44,6 +49,7 @@ void setup() {
     pinMode(ENABLE,OUTPUT);
     pinMode(DIRA,OUTPUT);
     pinMode(DIRB,OUTPUT);
+    servo.attach(SERVOPIN);
     radio.begin();                      // Activate Radio Object, uses default Arduino SPI bus
     Serial.begin(9600);
     if (radio.begin()) {
@@ -81,6 +87,10 @@ void loop() {
 
     int currentEnableState = payload.enableState;
     int currentDirectionState = payload.Direction;
+    int rawDirection = payload.xValue;
+    int direction = map(rawDirection, 0, 255, 0, 180);
+
+    servo.write(direction);
 
     //Debug below
     digitalWrite(DIRA, HIGH);
