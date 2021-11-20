@@ -40,6 +40,9 @@ packet payload;
 
 // Arduino Setup Section
 void setup() {
+    pinMode(ENABLE,OUTPUT);
+    pinMode(DIRA,OUTPUT);
+    pinMode(DIRB,OUTPUT);
     radio.begin();                      // Activate Radio Object, uses default Arduino SPI bus
     Serial.begin(9600);
     if (radio.begin()) {
@@ -76,6 +79,32 @@ void loop() {
     int currentEnableState = payload.enableState;
     int currentDirectionState = payload.swapDirection;
 
+    //Debug below
+    digitalWrite(DIRA, HIGH);
+    digitalWrite(DIRB, LOW);
+
+    if (currentEnableState == 1) {
+        digitalWrite(ENABLE, HIGH);
+        //Serial.println("Enabled ON");
+    }
+
+    else if (currentEnableState == 0) {
+        digitalWrite(ENABLE, LOW);
+       // Serial.println("Enabled OFF");
+    }
+    
+    if (currentDirectionState == 1) {
+        digitalWrite(DIRA, HIGH);
+        digitalWrite(DIRB, LOW);
+        //Serial.println("Direction Forward");
+    }
+
+    else if (currentDirectionState == 0) {
+        digitalWrite(DIRA, LOW);
+        digitalWrite(DIRB, HIGH);
+        //Serial.println("Direction Backwards");
+    }
+    /*
     if (currentEnableState != lastEnableState) {
         if (currentEnableState == HIGH) 
             digitalWrite(ENABLE, HIGH);
@@ -96,4 +125,5 @@ void loop() {
             digitalWrite(DIRB, HIGH);
         }
     }
+    */
 }
