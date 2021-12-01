@@ -75,20 +75,26 @@ void loop() {
     if (radio.available()) {                    // If data is available in buffer
         radio.read(&payload, sizeof(payload));  // Copy received packet to memory  
         // Print to serial monitor
-        Serial.print("X value: ");
+    /*    Serial.print("X value: ");
         Serial.print(payload.xValue);
         Serial.print("\tY value: ");
         Serial.print(payload.yValue);
         Serial.print("\tEnable State: ");
         Serial.print(payload.enableState);
         Serial.print("\tDirection state: ");
-        Serial.println(payload.Direction);   
+        Serial.print(payload.Direction);    */   
     }
 
     int currentEnableState = payload.enableState;
     int currentDirectionState = payload.Direction;
+    int motorPower = payload.yValue;
     int rawDirection = payload.xValue;
     int direction = map(rawDirection, 0, 255, 0, 180);
+    Serial.print("Servo direction: ");
+    Serial.print(direction);
+    Serial.print(" deg");
+    Serial.print("\tMotor power: ");
+    Serial.println(motorPower);
 
     servo.write(direction);
 
@@ -97,7 +103,7 @@ void loop() {
     digitalWrite(DIRB, LOW);
 
     if (currentEnableState == 1) {
-        digitalWrite(ENABLE, HIGH);
+        analogWrite(ENABLE, motorPower);
         //Serial.println("Enabled ON");
     }
 
@@ -117,26 +123,4 @@ void loop() {
         digitalWrite(DIRB, HIGH);
         //Serial.println("Direction Backwards");
     }
-    /*
-    if (currentEnableState != lastEnableState) {
-        if (currentEnableState == HIGH) 
-            digitalWrite(ENABLE, HIGH);
-
-        else if (currentEnableState == LOW)
-            digitalWrite(ENABLE, LOW);
-    }
-
-
-    if (currentDirectionState != lastDirectionState) {
-        if (lastDirectionState == HIGH) {
-            digitalWrite(DIRA, HIGH);
-            digitalWrite(DIRB, LOW);
-        }
-
-        else if (lastDirectionState == LOW) {
-            digitalWrite(DIRA, LOW);
-            digitalWrite(DIRB, HIGH);
-        }
-    }
-    */
 }
