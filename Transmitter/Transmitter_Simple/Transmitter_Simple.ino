@@ -32,9 +32,6 @@ const byte address[6] = "00001";    // Address can be any 5 bit byte array
 // Create Radio Object
 RF24 radio(CE, CSN);
 
-// Create Packet
-packet payload;
-
 // Arduino Setup Section
 void setup() {
     radio.begin();                  // Activate Radio Object, uses default Arduino SPI bus

@@ -36,7 +36,7 @@ byte lastDirectionState = HIGH;     // Integer to represent previous direction s
                                     // 0 = BACKWARDS
 
 // Create Radio Object
-RF24 radio(CE , CSN);
+RF24 radio(CE, CSN);
 
 // Create servo object
 Servo servo;
